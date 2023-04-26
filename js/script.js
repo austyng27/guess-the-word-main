@@ -72,13 +72,50 @@ const validateInput = function (input){
     }
 };
 
+//check if guess is unique and show letters 
 const makeGuess = function (guess){
     guess = guess.toUpperCase();
     if (guessedLetters.includes(guess)){
         message.innerText = "You've already guessed this letter. Please try again.";
     } else {
         guessedLetters.push(guess);
-        console.log(guessedLetters);
+        //console.log(guessedLetters);
+        displayPreviousGuesses();
+        updateProgress(guessedLetters);
     }  
         
+    };
+
+    //update li with letters guessed function
+    const displayPreviousGuesses = function(){
+        guessedLettersElement.innerHTML = "";
+        for (const letter of guessedLetters){
+            const li = document.createElement("li");
+            li.innerText = letter;
+            guessedLettersElement.append(li);
+        }
+    };
+
+    //update the hidden word function
+    const updateProgress = function (guessedLetters){
+        const wordUpper = word.toUpperCase();
+        const wordArray = wordUpper.split("");
+        const revealWord = [];
+        for (const letter of wordArray){
+            if (guessedLetters.includes(letter)){
+                revealWord.push(letter.toUpperCase());
+            } else {
+                revealWord.push("●");
+            }
+        }
+        wordProgress.innerText = revealWord.join("");
+        checkIfWin();
+    };
+
+    //check if player wins function
+    const checkIfWin = function(){
+        if (word.toUpperCase() === wordProgress.innerText){
+            message.classList.add("win");
+            message.innerHTML = `<p class="highlight">You guessed the correct word! Congrats!</p>`
+        }
     };
